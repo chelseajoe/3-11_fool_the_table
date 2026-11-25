@@ -1,0 +1,72 @@
+body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+
+.pbar {
+  display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+  padding: calc(.6rem + env(safe-area-inset-top, 0px)) 1rem .6rem;
+  background: #fff; color: var(--gravy); border-bottom: 3px solid var(--gravy);
+  position: sticky; top: 0; z-index: 5;
+}
+.me { display: flex; align-items: center; gap: .5rem; font-weight: 700; font-size: 1.1rem; min-width: 0; }
+.me .em { font-size: 1.7rem; }
+.me .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pbar-right { display: flex; align-items: center; gap: .6rem; font-size: 1.2rem; color: var(--cran); }
+
+.papp { flex: 1; padding: 1.1rem 1rem calc(1.4rem + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 1rem; max-width: 560px; width: 100%; margin: 0 auto; }
+
+.card { padding: 1.2rem 1.2rem 1.3rem; }
+.card h1, .card h2 { margin: 0 0 .5rem; color: var(--cran); }
+.card h1 { font-size: 2.1rem; line-height: 1.1; }
+.card h2 { font-size: 1.6rem; }
+.card p { margin: .3rem 0; font-size: 1.1rem; line-height: 1.45; }
+
+.field { display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1rem; }
+.field label { font-weight: 700; font-size: 1.05rem; }
+.field input {
+  font: inherit; font-size: 1.3rem; padding: .6em .7em;
+  border: 3px solid var(--gravy); border-radius: 14px; background: var(--cloth); color: var(--gravy);
+  width: 100%;
+}
+.field input.code { font-family: var(--display); letter-spacing: .3em; text-transform: uppercase; font-size: 2rem; text-align: center; }
+
+.mascots { display: grid; grid-template-columns: repeat(4, 1fr); gap: .55rem; }
+.mascots button {
+  aspect-ratio: 1; font-size: 2.1rem; border: 3px solid var(--gravy); border-radius: 16px;
+  background: #fff; display: grid; place-items: center; position: relative;
+}
+.mascots button[aria-pressed="true"] { background: #FDE3B5; box-shadow: 0 0 0 3px var(--squash); transform: scale(1.06); }
+.mascots button:disabled { opacity: .3; filter: grayscale(1); cursor: not-allowed; }
+.mascots button span { position: absolute; bottom: 2px; font-size: .62rem; font-weight: 700; font-family: var(--body); }
+
+.wide { width: 100%; font-size: 1.45rem; padding: .7em 1em; }
+.err { color: var(--lie); font-weight: 700; min-height: 1.4em; margin: .5rem 0 0; }
+
+.big-face { font-size: 6rem; text-align: center; line-height: 1; margin: .4rem 0; animation: hop 1.4s ease-in-out infinite; }
+.center { text-align: center; }
+
+.prompt { font-size: 1.35rem; font-weight: 700; line-height: 1.4; margin: 0; }
+.blank { display: inline-block; min-width: 3.5em; border-bottom: .12em solid var(--cran); color: var(--cran); }
+
+.ptimer { align-self: center; font-family: var(--display); font-size: 1.5rem; background: var(--gravy); color: var(--butter); border-radius: 999px; padding: .15em .9em; }
+.ptimer.urgent { background: var(--lie); color: #fff; }
+
+.warn { background: #FDE3B5; border: 2px solid var(--gravy); border-radius: 14px; padding: .7rem .9rem; font-weight: 700; font-size: 1.05rem; animation: wobble .5s 2; }
+.dbl { background: #FDE3B5; border: 2px solid var(--gravy); border-radius: 999px; padding: .3rem .9rem; font-family: var(--display); font-size: 1.2rem; text-align: center; }
+
+.choices { display: flex; flex-direction: column; gap: .7rem; }
+.choice {
+  font-size: 1.35rem; font-weight: 700; text-align: left;
+  background: #fff; color: var(--gravy);
+  border: 3px solid var(--gravy); border-radius: 14px; padding: .8em 1em;
+  box-shadow: 3px 3px 0 var(--gravy);
+}
+.choice:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--gravy); }
+
+.locked { text-align: center; }
+.locked .yours { display: inline-block; font-size: 1.5rem; font-weight: 700; background: var(--cloth); border: 3px dashed var(--gravy); border-radius: 12px; padding: .3em .8em; margin: .4rem 0; word-break: break-word; }
+.card .bigstat { font-family: var(--display); font-size: 3.6rem; color: var(--cran); margin: .2rem 0; line-height: 1; }
+.card .plus { font-family: var(--display); font-size: 1.8rem; color: var(--sage); }
+.muted { opacity: .75; font-size: 1rem !important; }
+
+.endcard h1 { margin-top: .2rem; }
+.myawards { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin: .6rem 0; }
+.myawards span { background: #FDE3B5; border: 2px solid var(--gravy); border-radius: 999px; padding: .25em .8em; font-weight: 700; }
