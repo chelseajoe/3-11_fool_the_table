@@ -6,7 +6,8 @@ export const SETTINGS = {
   voteSeconds: 30,    // time to vote
   truthPoints: 1000,  // points for picking the real answer
   foolPoints: 500,    // points for EACH team you fool with your fake
-  minOptions: 5       // if there are fewer answers than this, the game adds its own fakes
+  minOptions: 5,      // if there are fewer answers than this, the game adds its own fakes
+  aiSmartness: 0.55   // how often the AI team votes for the real answer (0 to 1)
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -16,6 +17,7 @@ export const SETTINGS = {
 //  accept : other spellings that count as the real answer
 //           (a team that types one of these is asked to write a fake instead)
 //  decoys : the game's own fake answers, used when teams don't write enough
+//  ai     : convincing fake answers the AI team picks from
 //  fact   : the "Did you know?" card shown after the reveal
 //  Add, remove, or edit questions freely.
 // ─────────────────────────────────────────────────────────────
@@ -25,6 +27,7 @@ export const QUESTIONS = [
     answer: "Friday",
     accept: ["friday"],
     decoys: ["Weekend", "Sale Day"],
+    ai: ["Monday", "Thursday", "Deal Day"],
     fact: "One popular explanation: stores finally make a profit that day, going from “in the red” (losing money) to “in the black” (making money)."
   },
   {
@@ -32,6 +35,7 @@ export const QUESTIONS = [
     answer: "Thursday",
     accept: ["thursday"],
     decoys: ["Sunday", "Monday"],
+    ai: ["Friday", "Saturday", "Wednesday"],
     fact: "In 1941, the U.S. Congress made it official: Thanksgiving is the fourth Thursday of November. Many people get Friday off too!"
   },
   {
@@ -39,6 +43,7 @@ export const QUESTIONS = [
     answer: "October",
     accept: ["october", "oct"],
     decoys: ["March", "December"],
+    ai: ["September", "November", "August"],
     fact: "Canadian Thanksgiving is on the second Monday of October, about six weeks before the American one."
   },
   {
@@ -46,6 +51,7 @@ export const QUESTIONS = [
     answer: "Mayflower",
     accept: ["mayflower", "may flower"],
     decoys: ["Santa Maria", "Sea Turkey"],
+    ai: ["Speedwell", "Endeavour", "Discovery"],
     fact: "About 100 passengers crossed the Atlantic Ocean on the Mayflower. The trip took more than two months!"
   },
   {
@@ -53,6 +59,7 @@ export const QUESTIONS = [
     answer: "Wampanoag",
     accept: ["wampanoag", "wampanoags", "wampanoag tribe"],
     decoys: ["Plymouth", "Harvest Moon"],
+    ai: ["Narragansett", "Lenape", "Mohawk"],
     fact: "About 90 Wampanoag men came to the feast, and it lasted three days. The Wampanoag Nation still lives in Massachusetts today."
   },
   {
@@ -60,6 +67,7 @@ export const QUESTIONS = [
     answer: "1863",
     accept: ["1863"],
     decoys: ["1776", "1901"],
+    ai: ["1789", "1621", "1865"],
     fact: "Lincoln announced it in 1863, in the middle of the Civil War, hoping the holiday would help bring the country together."
   },
   {
@@ -67,6 +75,7 @@ export const QUESTIONS = [
     answer: "Lamb",
     accept: ["lamb"],
     decoys: ["Turkey", "Garden"],
+    ai: ["Kitten", "Pony", "Garden"],
     fact: "Sarah Josepha Hale wrote letters to presidents for about 17 years asking for a national Thanksgiving. Lincoln finally said yes!"
   },
   {
@@ -74,6 +83,7 @@ export const QUESTIONS = [
     answer: "Bald Eagle",
     accept: ["bald eagle", "eagle", "eagles", "american eagle"],
     decoys: ["Chicken", "Peacock"],
+    ai: ["Owl", "Swan", "Rooster"],
     fact: "In a 1784 letter to his daughter, Franklin joked that the bald eagle had “bad moral character.” He never really tried to make the turkey the national bird, though!"
   },
   {
@@ -81,6 +91,7 @@ export const QUESTIONS = [
     answer: "Turkey",
     accept: ["turkey", "turkeys"],
     decoys: ["Pig", "Pumpkin"],
+    ai: ["Goose", "Chicken", "Duck"],
     fact: "The official turkey pardon started in 1989. The lucky turkeys get to live the rest of their lives on a farm."
   },
   {
@@ -88,6 +99,7 @@ export const QUESTIONS = [
     answer: "Tom",
     accept: ["tom", "toms", "tom turkey", "gobbler"],
     decoys: ["Rooster", "Duke"],
+    ai: ["Drake", "Buck", "Stag"],
     fact: "Male turkeys are called toms (or gobblers), and female turkeys are called hens."
   },
   {
@@ -95,6 +107,7 @@ export const QUESTIONS = [
     answer: "Poult",
     accept: ["poult", "poults"],
     decoys: ["Turklet", "Nugget"],
+    ai: ["Gosling", "Chickling", "Gobbling"],
     fact: "Baby turkeys are called poults. They can leave the nest and walk around less than a day after hatching!"
   },
   {
@@ -102,6 +115,7 @@ export const QUESTIONS = [
     answer: "Snood",
     accept: ["snood"],
     decoys: ["Beak Flap", "Gobblet"],
+    ai: ["Wattle", "Comb", "Crest"],
     fact: "When a male turkey gets excited or wants to show off, his snood gets longer and redder."
   },
   {
@@ -109,6 +123,7 @@ export const QUESTIONS = [
     answer: "Gobble",
     accept: ["gobble", "gobble gobble", "gobbling", "gobbles"],
     decoys: ["Quack", "Honk"],
+    ai: ["Cluck", "Squawk", "Hoot"],
     fact: "Female turkeys don’t gobble. They make clucking and yelping sounds instead."
   },
   {
@@ -116,6 +131,7 @@ export const QUESTIONS = [
     answer: "Trees",
     accept: ["trees", "tree", "a tree", "tree branches", "branches"],
     decoys: ["Caves", "Holes"],
+    ai: ["Barns", "Tall Grass", "Nests"],
     fact: "Wild turkeys can fly! They fly up into trees at night to stay safe from animals that hunt them."
   },
   {
@@ -123,6 +139,7 @@ export const QUESTIONS = [
     answer: "Balloons",
     accept: ["balloons", "balloon", "giant balloons", "helium balloons"],
     decoys: ["Robots", "Pumpkins"],
+    ai: ["Puppets", "Kites", "Statues"],
     fact: "The parade started in 1924, and the giant balloons were added in 1927. The biggest balloons need dozens of people holding ropes to guide them down the street!"
   },
   {
@@ -130,6 +147,7 @@ export const QUESTIONS = [
     answer: "Football",
     accept: ["football", "american football", "nfl", "nfl football", "football games"],
     decoys: ["Basketball", "Baseball"],
+    ai: ["Soccer", "Hockey", "Tennis"],
     fact: "The Detroit Lions football team has played a game on Thanksgiving almost every year since 1934."
   },
   {
@@ -137,6 +155,7 @@ export const QUESTIONS = [
     answer: "Marshmallows",
     accept: ["marshmallows", "marshmallow", "mini marshmallows"],
     decoys: ["Cheese", "Chocolate Chips"],
+    ai: ["Chocolate", "Peanut Butter", "Cream Cheese"],
     fact: "A marshmallow company shared this recipe more than 100 years ago to help sell more marshmallows. It worked!"
   },
   {
@@ -144,6 +163,7 @@ export const QUESTIONS = [
     answer: "Can",
     accept: ["can", "the can", "tin", "cylinder", "tube"],
     decoys: ["Turkey", "Heart"],
+    ai: ["Pumpkin", "Bowl", "Moon"],
     fact: "Many Americans love it this way, and some people even slice it along the lines left by the can."
   },
   {
@@ -151,6 +171,7 @@ export const QUESTIONS = [
     answer: "Trot",
     accept: ["trot", "trots"],
     decoys: ["Stampede", "Shuffle"],
+    ai: ["Gallop", "Stomp", "Waddle"],
     fact: "The Turkey Trot in Buffalo, New York, started in 1896, making it one of the oldest footraces in America."
   },
   {
@@ -158,6 +179,7 @@ export const QUESTIONS = [
     answer: "Make a wish",
     accept: ["make a wish", "wish", "a wish", "get a wish", "make wish"],
     decoys: ["Eat the Turkey", "Skip the Dishes"],
+    ai: ["Keep the bone", "Eat dessert first", "Pick the movie"],
     fact: "Families dry the wishbone for a few days first so it snaps more easily."
   }
 ];

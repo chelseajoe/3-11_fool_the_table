@@ -117,6 +117,7 @@ function openRoom(c) {
 
 // ── Render on every data change ──────────────────────────────
 function render() {
+  runAI();
   const s = st();
   const phase = s.phase || "lobby";
   $("progress").textContent = (phase !== "lobby" && phase !== "end" && s.total) ? `Question ${s.qNum + 1} of ${s.total}` : "";
@@ -196,11 +197,76 @@ function setupLobby() {
 function renderLobby() {
   const n = teamList().length;
   $("startBtn").disabled = n < 2;
+  $("aiBtn").textContent = aiInGame() ? "🤖 Remove the AI team" : "🤖 Add the AI team";
   $("lobbyHint").textContent = n < 2 ? "Waiting for at least 2 teams…" : `${n} teams at the table. Click a team below to remove it.`;
   if (n > prevTeams) sfx.join();
   prevTeams = n;
 }
 $("startBtn").onclick = () => advance(startGame);
+
+// ── AI team ──────────────────────────────────────────────────
+const AI_ID = "ai-team";
+const aiPlanned = new Set();
+const rand = (a, b) => a + Math.random() * (b - a);
+const aiInGame = () => !!(room && room.teams && room.teams[AI_ID]);
+
+$("aiBtn").onclick = async () => {
+  if (st().phase !== "lobby") return;
+  if (aiInGame()) {
+    await update(R(""), { [`teams/${AI_ID}`]: null, "mascots/robot": null });
+  } else {
+    await update(R(""), {
+      [`teams/${AI_ID}`]: { name: "AI", mascot: "robot", score: 0, lastDelta: 0, joinedAt: Date.now(), online: true, bot: true },
+      "mascots/robot": AI_ID
+    });
+  }
+};
+
+// Runs on every update: makes the AI write a fake and vote, like a real team
+function runAI() {
+  if (!aiInGame()) return;
+  const s = st();
+  const q = currentQ();
+  if (!q) return;
+  const key = `${code}|${s.phase}|${s.qNum}`;
+  if (aiPlanned.has(key)) return;
+
+  if (s.phase === "write") {
+    const ans = room.answers && room.answers[s.qNum] && room.answers[s.qNum][AI_ID];
+    if (ans) return;
+    aiPlanned.add(key);
+    const latest = Math.max(1500, (s.deadline || 0) - now() - 4000);
+    setTimeout(() => {
+      const cur = st();
+      if (cur.phase !== "write" || cur.qNum !== s.qNum) return;
+      const acc = acceptSet(q);
+      const taken = new Set(Object.values((room.answers && room.answers[s.qNum]) || {}).map(a => normalize(a && a.text)));
+      const usable = list => (list || []).filter(t => !acc.has(normalize(t)) && !taken.has(normalize(t)));
+      const choices = usable(q.ai).length ? usable(q.ai) : usable(q.decoys).length ? usable(q.decoys) : (q.ai || q.decoys || []);
+      const pick = choices[Math.floor(Math.random() * choices.length)];
+      if (pick) set(R(`answers/${s.qNum}/${AI_ID}`), { text: pick, at: Date.now() });
+    }, Math.min(rand(9000, 20000), latest));
+  }
+
+  if (s.phase === "vote") {
+    const v = room.votes && room.votes[s.qNum] && room.votes[s.qNum][AI_ID];
+    if (v) return;
+    aiPlanned.add(key);
+    const latest = Math.max(1500, (s.deadline || 0) - now() - 3000);
+    setTimeout(() => {
+      const cur = st();
+      if (cur.phase !== "vote" || cur.qNum !== s.qNum) return;
+      const opts = (room.options && room.options[s.qNum]) || {};
+      const truth = room.secret && room.secret[s.qNum];
+      const mine = id => opts[id] && opts[id].owners && opts[id].owners[AI_ID];
+      const ok = Object.keys(opts).filter(id => !mine(id));
+      const fakes = ok.filter(id => id !== truth);
+      const goTruth = ok.includes(truth) && (Math.random() < (SETTINGS.aiSmartness ?? 0.55) || !fakes.length);
+      const pick = goTruth ? truth : fakes[Math.floor(Math.random() * fakes.length)];
+      if (pick) set(R(`votes/${s.qNum}/${AI_ID}`), pick);
+    }, Math.min(rand(5000, 12000), latest));
+  }
+}
 
 async function startGame() {
   const n = Math.min(+$("qCount").value || 7, QUESTIONS.length);
