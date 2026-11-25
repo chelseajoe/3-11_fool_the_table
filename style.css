@@ -1,0 +1,69 @@
+@import url("https://fonts.googleapis.com/css2?family=Lilita+One&family=Atkinson+Hyperlegible:wght@400;700&display=swap");
+
+:root {
+  --cran: #9E1B32;
+  --cran-deep: #5E0B1E;
+  --butter: #FFFFFF;
+  --butter-dim: #EFE7DA;
+  --gravy: #3A2318;
+  --squash: #F5A623;
+  --sage: #4F9150;
+  --lie: #D7263D;
+  --cloth: #F4EFE8;
+  --display: "Lilita One", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+
+body {
+  font-family: var(--body);
+  color: var(--gravy);
+  background-color: var(--cloth);
+}
+
+button { font: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 4px solid var(--squash); outline-offset: 3px; }
+
+.display { font-family: var(--display); font-weight: 400; letter-spacing: .01em; }
+
+.panel {
+  background: var(--butter);
+  border: 3px solid var(--gravy);
+  border-radius: 20px;
+  box-shadow: 4px 4px 0 var(--gravy);
+}
+
+.btn {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  background: var(--squash);
+  color: var(--gravy);
+  border: 3px solid var(--gravy);
+  border-radius: 999px;
+  padding: .6em 1.4em;
+  box-shadow: 3px 3px 0 var(--gravy);
+  transition: transform .08s, box-shadow .08s;
+}
+.btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--gravy); }
+.btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--gravy); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: 4px 4px 0 var(--gravy); }
+.btn.quiet { background: var(--butter); font-size: 1rem; padding: .45em 1em; box-shadow: 2px 2px 0 var(--gravy); }
+
+.dot { display: inline-block; width: .8em; height: .8em; border-radius: 50%; background: #aaa; border: 2px solid var(--gravy); vertical-align: middle; }
+.dot.on { background: #6BCB6E; }
+.dot.off { background: var(--lie); }
+
+.hidden { display: none !important; }
+
+@keyframes pop-in { from { transform: scale(.4); opacity: 0; } 70% { transform: scale(1.08); } to { transform: scale(1); opacity: 1; } }
+@keyframes wobble { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } }
+@keyframes stamp { from { transform: scale(2.4) rotate(-14deg); opacity: 0; } to { transform: scale(1) rotate(-8deg); opacity: 1; } }
+@keyframes fall { to { transform: translateY(110vh) rotate(540deg); } }
+@keyframes flop { to { transform: rotate(90deg) translateY(6px); filter: grayscale(.6); } }
+@keyframes hop { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition: none !important; }
+}
