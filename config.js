@@ -1,5 +1,5 @@
 // Your web app's Firebase configuration
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyB05TZLCz1PYronOj_P9EGKAiPTSN4wbRw",
   authDomain: "fool-the-table.firebaseapp.com",
   databaseURL: "https://fool-the-table-default-rtdb.firebaseio.com",
