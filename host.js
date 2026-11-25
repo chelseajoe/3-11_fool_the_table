@@ -20,6 +20,8 @@ let current = null;
 function show(name) {
   SCREENS.forEach(s => $("s-" + s).classList.toggle("hidden", s !== name));
   current = name;
+  document.body.dataset.screen = name;
+  if (name !== "fact" && typeof stopMedia === "function") stopMedia();
 }
 
 let code = null;        // room code
@@ -443,17 +445,16 @@ async function runReveal() {
 $("rSkip").onclick = () => { skipReveal = true; };
 
 // ── Pictures / videos on the fact card ───────────────────────
-let mediaTimer = null;
 function stopMedia() {
-  clearTimeout(mediaTimer);
-  document.querySelectorAll("#fMedia video").forEach(v => { v.pause(); v.onended = null; });
+  document.querySelectorAll("#fMedia video").forEach(v => v.pause());
 }
 function preloadMedia(q) {
-  (q && q.media || []).forEach(m => {
+  ((q && q.media) || []).forEach(m => {
     if (m.type === "video") { const v = document.createElement("video"); v.preload = "auto"; v.src = m.src; }
     else { const i = new Image(); i.src = m.src; }
   });
 }
+// Shows every picture and video at once, like photos dropped on a table
 function showMedia(q) {
   stopMedia();
   const box = $("fMedia");
@@ -462,31 +463,22 @@ function showMedia(q) {
   box.classList.toggle("hidden", !items.length);
   box.innerHTML = "";
   if (!items.length) return;
-  box.innerHTML = items.map(m => m.type === "video"
-      ? `<video class="m" src="${escapeHTML(m.src)}" muted playsinline preload="auto" ${items.length === 1 ? "loop" : ""} aria-label="${escapeHTML(m.alt || "")}"></video>`
-      : `<img class="m" src="${escapeHTML(m.src)}" alt="${escapeHTML(m.alt || "")}">`).join("") +
-    (items.length > 1 ? `<div class="mdots">${items.map((_, i) => `<button data-i="${i}" aria-label="Show picture ${i + 1}"></button>`).join("")}</div>` : "");
-  const els = [...box.querySelectorAll(".m")];
-  const dots = [...box.querySelectorAll(".mdots button")];
-  let idx = -1;
-  const go = i => {
-    clearTimeout(mediaTimer);
-    idx = i;
-    els.forEach((el, k) => {
-      el.classList.toggle("on", k === i);
-      if (el.tagName === "VIDEO") {
-        el.onended = null;
-        if (k === i) { el.currentTime = 0; el.play().catch(() => {}); } else el.pause();
-      }
+  const tilt = [-3, 2.5, -1.5, 3, -2.5, 1.5];
+  box.innerHTML = items.map((m, i) => {
+    const style = `--r:${tilt[i % tilt.length]}deg; --d:${0.15 + i * 0.18}s`;
+    const inner = m.type === "video"
+      ? `<video src="${escapeHTML(m.src)}" muted autoplay loop playsinline preload="auto" aria-label="${escapeHTML(m.alt || "")}"></video>`
+      : `<img src="${escapeHTML(m.src)}" alt="${escapeHTML(m.alt || "")}">`;
+    return `<div class="ph" style="${style}">${inner}</div>`;
+  }).join("");
+  // If a file is missing, hide its frame instead of showing a broken picture
+  box.querySelectorAll("img, video").forEach(el => {
+    el.addEventListener("error", () => {
+      el.closest(".ph").remove();
+      if (!box.querySelector(".ph")) { box.classList.add("hidden"); $("factCard").classList.remove("has-media"); }
     });
-    dots.forEach((d, k) => d.classList.toggle("on", k === i));
-    if (els.length < 2) return;
-    const el = els[i];
-    if (el.tagName === "VIDEO") el.onended = () => { mediaTimer = setTimeout(() => go((idx + 1) % els.length), 1200); };
-    else mediaTimer = setTimeout(() => go((idx + 1) % els.length), 4500);
-  };
-  dots.forEach(d => { d.onclick = () => go(+d.dataset.i); });
-  go(0);
+  });
+  box.querySelectorAll("video").forEach(v => { v.currentTime = 0; v.play().catch(() => {}); });
 }
 
 $("fNext").onclick = () => advance(async () => {

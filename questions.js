@@ -19,8 +19,8 @@ export const SETTINGS = {
 //  decoys : the game's own fake answers, used when teams don't write enough
 //  fact   : the "Did you know?" card shown after the reveal
 //  media  : (optional) pictures or videos shown on the "Did you know?" card.
-//           Put the files in the media folder, then list them like this:
-//           media: [{ src: "media/photo.jpg" }, { src: "media/clip.mp4", type: "video" }]
+//           Put the files in the images folder, then list them like this:
+//           media: [{ src: "images/photo.jpg" }, { src: "images/clip.mp4", type: "video" }]
 //  Add, remove, or edit questions freely.
 // ─────────────────────────────────────────────────────────────
 export const QUESTIONS = [
@@ -31,9 +31,9 @@ export const QUESTIONS = [
     decoys: ["Bowl", "Jar", "Box"],
     fact: "Canned cranberry sauce slides out in one piece, still shaped like the can, ridges and all! Many families slice it into circles. Others make it fresh with whole cranberries.",
     media: [
-      { src: "media/cranberry-slices.jpg", alt: "Canned cranberry sauce cut into round slices" },
-      { src: "media/cranberry-can.mp4", type: "video", alt: "Cranberry sauce sliding out of a can onto a plate" },
-      { src: "media/cranberry-plate.jpg", alt: "A Thanksgiving plate with turkey, mashed potatoes, and cranberry sauce" }
+      { src: "images/cranberry-slices.jpg", alt: "Canned cranberry sauce cut into round slices" },
+      { src: "images/cranberry-can.mp4", type: "video", alt: "Cranberry sauce sliding out of a can onto a plate" },
+      { src: "images/cranberry-plate.jpg", alt: "A Thanksgiving plate with turkey, mashed potatoes, and cranberry sauce" }
     ]
   },
   {
