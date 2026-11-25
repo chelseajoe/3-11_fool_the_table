@@ -89,20 +89,35 @@ export const QUESTIONS = [
     answer: "Thankful",
     accept: ["thankful", "grateful", "thanks", "giving thanks", "thank full"],
     decoys: ["Sorry", "Hungry", "Famous"],
-    fact: "This tradition is the heart of the holiday. The name Thanksgiving means giving thanks!"
+    fact: "This tradition is the heart of the holiday. The name Thanksgiving means giving thanks! Many families also hold hands or bow their heads to say a short thank-you before eating.",
+    media: [
+      { src: "images/thankful-family-1.jpg", alt: "A family giving thanks before a meal" },
+      { src: "images/thankful-family-2.jpg", alt: "A family holding hands around the Thanksgiving table" },
+      { src: "images/thankful-art.jpg", alt: "A cartoon family of mice at a Thanksgiving table" }
+    ]
   },
   {
     prompt: "Every year, the U.S. President “pardons” a ______ so it doesn’t get eaten.",
     answer: "Turkey",
     accept: ["turkey", "turkeys"],
     decoys: ["Goose", "Chicken", "Duck"],
-    fact: "The official turkey pardon started in 1989. The lucky turkeys get to live the rest of their lives on a farm."
+    fact: "The official turkey pardon started in 1989. Each year at the White House, the President pardons a turkey, and the lucky turkeys get to live the rest of their lives on a farm.",
+    media: [
+      { src: "images/pardon-1.jpg", alt: "A President pardoning a white turkey at the White House" },
+      { src: "images/pardon-2.jpg", alt: "A President pardoning a turkey in front of fall leaves" },
+      { src: "images/pardon-3.jpg", alt: "A President pardoning a turkey at the White House" }
+    ]
   },
   {
     prompt: "On Thanksgiving Day, millions of Americans watch ______ games on TV.",
     answer: "Football",
     accept: ["football", "american football", "nfl", "nfl football", "football games"],
     decoys: ["Soccer", "Hockey", "Tennis"],
-    fact: "The Detroit Lions football team has played a game on Thanksgiving almost every year since 1934."
+    fact: "The Detroit Lions football team has played a game on Thanksgiving almost every year since 1934. After some games, the winning players even eat turkey legs on the field!",
+    media: [
+      { src: "images/football-1.jpg", alt: "Football players eating turkey on the field after a Thanksgiving game" },
+      { src: "images/football-2.jpg", alt: "Football players celebrating with a turkey after a Thanksgiving game" },
+      { src: "images/football-schedule.jpg", alt: "A schedule of Thanksgiving week football games" }
+    ]
   }
 ];

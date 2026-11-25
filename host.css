@@ -206,6 +206,6 @@ body[data-screen="fact"] .table-row { display: none !important; }
   transition: transform .25s;
 }
 .fact-media .ph:hover { transform: rotate(0deg) scale(1.04); }
-.fact-media .ph img, .fact-media .ph video { display: block; height: 32vh; width: auto; max-width: 30vw; object-fit: cover; border-radius: 3px; background: var(--cloth); }
+.fact-media .ph img, .fact-media .ph video { display: block; height: 32vh; width: auto; max-width: 24vw; object-fit: cover; border-radius: 3px; background: var(--cloth); }
 @keyframes photo-drop { from { opacity: 0; transform: translateY(-40px) rotate(calc(var(--r, 0deg) * 3)) scale(.8); } to { opacity: 1; transform: rotate(var(--r, 0deg)); } }
 @media (max-width: 900px) { .fact-media { flex-wrap: wrap; } .fact-media .ph img, .fact-media .ph video { height: 24vh; max-width: 80vw; } }
