@@ -41,7 +41,12 @@ export const QUESTIONS = [
     answer: "Make a wish",
     accept: ["make a wish", "wish", "a wish", "get a wish", "make wish"],
     decoys: ["Keep the bone", "Eat dessert first", "Pick the movie"],
-    fact: "Families dry the wishbone for a few days first so it snaps more easily."
+    fact: "The wishbone is actually the bird’s collarbone! Families let it dry for a few days so it snaps more easily. Then two people pull, and whoever gets the bigger piece makes a wish.",
+    media: [
+      { src: "images/wishbone-pull.jpg", alt: "Two people pulling a turkey wishbone over a Thanksgiving turkey" },
+      { src: "images/wishbone.gif", alt: "Animated wishbone being pulled apart" },
+      { src: "images/wishbone-bone.jpg", alt: "A dried wishbone next to a bird skeleton showing where the wishbone is" }
+    ]
   },
   {
     prompt: "Many Americans eat sweet potatoes with melted ______ on top.",
