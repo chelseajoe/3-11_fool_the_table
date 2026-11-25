@@ -53,14 +53,36 @@ export const QUESTIONS = [
     answer: "Marshmallows",
     accept: ["marshmallows", "marshmallow", "mini marshmallows"],
     decoys: ["Chocolate", "Peanut Butter", "Cream Cheese"],
-    fact: "A marshmallow company shared this recipe more than 100 years ago to help sell more marshmallows. It worked!"
+    fact: "This dish is often called “candied yams.” In the U.S., orange sweet potatoes are often called yams, even though real yams are a different plant! A marshmallow company shared the recipe more than 100 years ago to help sell more marshmallows.",
+    media: [
+      { src: "images/marshmallow-casserole.jpg", alt: "Sweet potato casserole topped with toasted marshmallows" },
+      { src: "images/marshmallows.jpg", alt: "A pile of white marshmallows" },
+      { src: "images/sweet-potatoes.jpg", alt: "Whole and cut orange sweet potatoes" }
+    ]
+  },
+  {
+    prompt: "The bread mixture that is cooked inside the turkey is called ______.",
+    answer: "Stuffing",
+    accept: ["stuffing", "dressing", "the stuffing"],
+    decoys: ["Filling", "Breading", "Crumble"],
+    fact: "Stuffing is made from bread, onion, celery, herbs, butter, and broth. In the southern United States, many people call it “dressing” instead, and they often bake it in a separate pan.",
+    media: [
+      { src: "images/stuffing-ingredients.jpg", alt: "Stuffing ingredients: bread, onion, celery, herbs, butter, broth" },
+      { src: "images/stuffing-dish.jpg", alt: "A baking dish of golden stuffing" },
+      { src: "images/stuffing-plate.jpg", alt: "A Thanksgiving plate with turkey, stuffing, mashed potatoes, green beans, and cranberry sauce" }
+    ]
   },
   {
     prompt: "The extra food that families eat for days after Thanksgiving is called ______.",
     answer: "Leftovers",
     accept: ["leftovers", "left overs", "leftover", "left over"],
     decoys: ["Seconds", "Extras", "Snacks"],
-    fact: "The day after Thanksgiving, many Americans make turkey sandwiches with the leftover turkey, stuffing, and cranberry sauce."
+    fact: "The day after Thanksgiving, many Americans make turkey sandwiches with the leftover turkey, stuffing, and cranberry sauce.",
+    media: [
+      { src: "images/leftovers-containers.jpg", alt: "Thanksgiving leftovers in glass containers" },
+      { src: "images/leftovers-sandwich-1.jpg", alt: "A tall leftover Thanksgiving sandwich" },
+      { src: "images/leftovers-sandwich-2.jpg", alt: "A turkey, stuffing, and cranberry sandwich" }
+    ]
   },
   {
     prompt: "Before eating, many families go around the table and each person says what they are ______ for.",
@@ -75,20 +97,6 @@ export const QUESTIONS = [
     accept: ["turkey", "turkeys"],
     decoys: ["Goose", "Chicken", "Duck"],
     fact: "The official turkey pardon started in 1989. The lucky turkeys get to live the rest of their lives on a farm."
-  },
-  {
-    prompt: "Green bean casserole is a famous Thanksgiving dish topped with crispy fried ______.",
-    answer: "Onions",
-    accept: ["onions", "onion", "fried onions", "crispy onions", "crispy fried onions"],
-    decoys: ["Noodles", "Bacon", "Potatoes"],
-    fact: "The recipe was invented in 1955 by a cook named Dorcas Reilly, who worked for a soup company."
-  },
-  {
-    prompt: "The bread mixture that is cooked inside the turkey is called ______.",
-    answer: "Stuffing",
-    accept: ["stuffing", "dressing", "the stuffing"],
-    decoys: ["Filling", "Breading", "Crumble"],
-    fact: "In the southern United States, many people call it “dressing” instead, and they often bake it in a separate pan."
   },
   {
     prompt: "On Thanksgiving Day, millions of Americans watch ______ games on TV.",
