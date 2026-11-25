@@ -72,7 +72,7 @@ function renderMascots(taken) {
   const box = $("mascots");
   if (!box) return;
   if (chosenMascot && taken[chosenMascot]) chosenMascot = null;
-  box.innerHTML = MASCOTS.filter(m => !m.botOnly).map(m =>
+  box.innerHTML = MASCOTS.map(m =>
     `<button type="button" data-id="${m.id}" aria-pressed="${chosenMascot === m.id}" ${taken[m.id] ? "disabled" : ""} aria-label="${m.name}">${m.emoji}<span>${m.name}</span></button>`
   ).join("");
   box.querySelectorAll("button").forEach(b => b.onclick = () => { chosenMascot = b.dataset.id; renderMascots(taken); });

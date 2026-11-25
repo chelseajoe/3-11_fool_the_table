@@ -34,8 +34,7 @@ export const MASCOTS = [
   { id: "deer",     emoji: "🦌", name: "Deer",      color: "#A0703C" },
   { id: "raccoon",  emoji: "🦝", name: "Raccoons",  color: "#56616B" },
   { id: "squirrel", emoji: "🐿️", name: "Squirrels", color: "#B5482F" },
-  { id: "pig",      emoji: "🐷", name: "Pigs",      color: "#D9708A" },
-  { id: "robot",    emoji: "🤖", name: "AI",        color: "#4A6FA5", botOnly: true }
+  { id: "pig",      emoji: "🐷", name: "Pigs",      color: "#D9708A" }
 ];
 export const mascotById = id => MASCOTS.find(m => m.id === id) || { emoji: "❓", name: "?", color: "#888888" };
 
