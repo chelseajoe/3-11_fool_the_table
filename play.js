@@ -1,6 +1,6 @@
 import {
   connect, configMissing, db, ref, onValue, set, update, get, remove, runTransaction, onDisconnect,
-  now, MASCOTS, mascotById, escapeHTML, makeId, store, recall
+  now, MASCOTS, mascotById, escapeHTML, makeId, store, recall, HOST_GRACE_MS
 } from "./shared.js";
 
 const $ = id => document.getElementById(id);
@@ -114,14 +114,39 @@ async function join() {
   }
 }
 
+let onlineDisc = null;
 function markOnline() {
   const r = R(`teams/${tid}/online`);
   get(R(`teams/${tid}`)).then(s => {
     if (!s.exists()) return;
     set(r, true);
-    onDisconnect(r).set(false);
+    onlineDisc = onDisconnect(r);
+    onlineDisc.set(false);
   }).catch(() => {});
 }
+
+// Hidden "Leave" button in the top corner
+$("leaveBtn").onclick = async () => {
+  if (!code || !tid) return;
+  if (!confirm("Leave this game? Your team will be removed.")) return;
+  const me = room && room.teams && room.teams[tid];
+  const upd = { [`teams/${tid}`]: null };
+  if (me && room.mascots && room.mascots[me.mascot] === tid) upd[`mascots/${me.mascot}`] = null;
+  if (onlineDisc) { try { await onlineDisc.cancel(); } catch (e) {} onlineDisc = null; }
+  try { await update(R(""), upd); } catch (e) {}
+  leave("You left the game.", false);
+};
+
+// If the big screen closes, leave automatically after a short wait
+function checkHost() {
+  const banner = $("hostWait");
+  const h = room && room.host;
+  const gone = h && h.online === false && typeof h.leftAt === "number";
+  if (!gone) { banner.classList.add("hidden"); return; }
+  if (now() - h.leftAt > HOST_GRACE_MS) { leave("The big screen closed the game. Join again when a new game starts.", false); return; }
+  banner.classList.remove("hidden");
+}
+setInterval(() => { if (room) checkHost(); }, 2000);
 
 // ── Listen to the game ───────────────────────────────────────
 function listen() {
@@ -129,18 +154,24 @@ function listen() {
   if (unsub) unsub();
   unsub = onValue(R(""), snap => {
     room = snap.val();
-    if (!room || !room.state) { leave("That game has ended."); return; }
+    if (!room || !room.state) { leave("That game was closed. Join again when a new game starts.", false); return; }
     if (!room.teams || !room.teams[tid]) { leave("Your team was removed. You can join again."); return; }
+    $("leaveBtn").classList.remove("hidden");
+    checkHost();
+    if (!room) return;
     render();
   });
 }
 
-function leave(msg) {
+function leave(msg, keepCode = true) {
   if (unsub) { unsub(); unsub = null; }
+  if (onlineDisc) { onlineDisc.cancel().catch(() => {}); onlineDisc = null; }
   const c = code;
   store("ftt_player", null);
   code = null; tid = null; room = null;
-  showJoin(c || "", msg);
+  $("hostWait").classList.add("hidden");
+  $("leaveBtn").classList.add("hidden");
+  showJoin(keepCode ? (c || "") : "", msg);
 }
 
 function setHeader(me) {

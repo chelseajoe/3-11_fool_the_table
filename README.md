@@ -79,7 +79,10 @@ Controls during the game:
 - **Remove a fake answer**: during voting, hover over an answer card and click the small ✕. Use this for anything inappropriate.
 - **Skip animation**: jump straight to the fun fact.
 - **🔊**: sound on or off.
-- If a phone refreshes or the browser closes, the team rejoins automatically when they reopen the page. If your laptop refreshes, click **Continue game**.
+- If a phone refreshes or the browser closes, the team rejoins automatically when they reopen the page. If your laptop refreshes, click **Continue game** within 30 seconds.
+- **Close room** (small gray text next to the room code): ends the game and sends every phone back to the join screen. Use it if something goes wrong and you need a fresh room. Starting a new game also closes the old room.
+- If you close the big-screen tab, phones show a "waiting" message and leave the game automatically after 30 seconds.
+- **Leave** (small gray text in the top corner of each phone): lets a team leave the game on its own.
 
 ## Editing questions
 Open `questions.js`. Each question has:

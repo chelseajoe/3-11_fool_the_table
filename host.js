@@ -1,5 +1,5 @@
 import {
-  connect, configMissing, db, ref, onValue, set, update, get,
+  connect, configMissing, db, ref, onValue, set, update, get, remove, onDisconnect, serverTimestamp, HOST_GRACE_MS,
   now, mascotById, normalize, escapeHTML, makeId, makeRoomCode,
   sleep, store, recall, sfx, setMuted, muted
 } from "./shared.js";
@@ -78,14 +78,25 @@ $("muteBtn").onclick = () => { setMuted(!muted); $("muteBtn").textContent = mute
 if (configMissing()) {
   show("setup");
 } else {
-  connect(on => { $("conn").className = "dot " + (on ? "on" : "off"); if (!on && code) toast("Connection lost. Trying to reconnect…"); });
+  connect(on => {
+    $("conn").className = "dot " + (on ? "on" : "off");
+    if (!on && code) toast("Connection lost. Trying to reconnect…");
+    if (on && code) markHost();
+  });
   show("start");
   const saved = recall("ftt_host_room");
   if (saved) {
-    get(ref(db, `rooms/${saved}/state`)).then(s => {
-      if (s.exists()) {
+    get(ref(db, `rooms/${saved}`)).then(s => {
+      const r = s.val();
+      if (!r || !r.state) { store("ftt_host_room", null); return; }
+      const h = r.host || {};
+      const recent = h.online !== false || (typeof h.leftAt === "number" && now() - h.leftAt < HOST_GRACE_MS);
+      if (recent) {
         $("resumeBtn").textContent = `Continue game ${saved}`;
         $("resumeBtn").classList.remove("hidden");
+      } else {
+        remove(ref(db, `rooms/${saved}`)).catch(() => {}); // old game: clean it up
+        store("ftt_host_room", null);
       }
     }).catch(() => {});
   }
@@ -93,7 +104,40 @@ if (configMissing()) {
   $("resumeBtn").onclick = () => openRoom(saved);
 }
 
+// Tells phones the host is here. If this tab closes, Firebase marks the host as gone,
+// and phones leave the game after HOST_GRACE_MS (a quick refresh is fine).
+let hostDisc = null;
+function markHost() {
+  if (!code) return;
+  const r = R("host");
+  hostDisc = onDisconnect(r);
+  hostDisc.set({ online: false, leftAt: serverTimestamp() }).catch(() => {});
+  set(r, { online: true }).catch(() => {});
+}
+
+// Deletes the current room. Every phone in it is sent back to the join screen.
+async function closeRoom() {
+  const old = code || recall("ftt_host_room");
+  if (unsub) { unsub(); unsub = null; }
+  if (hostDisc) { try { await hostDisc.cancel(); } catch (e) {} hostDisc = null; }
+  if (old) { try { await remove(ref(db, `rooms/${old}`)); } catch (e) {} }
+  store("ftt_host_room", null);
+  code = null; room = null; current = null;
+  $("roomTag").classList.add("hidden");
+  $("closeRoomBtn").classList.add("hidden");
+  $("tableRow").classList.add("hidden");
+  $("progress").textContent = "";
+  $("resumeBtn").classList.add("hidden");
+}
+
+$("closeRoomBtn").onclick = async () => {
+  if (!confirm("Close this room? Every phone will be disconnected, and you can start a new game.")) return;
+  await closeRoom();
+  show("start");
+};
+
 async function createRoom() {
+  await closeRoom(); // a new room always replaces the old one
   let c;
   for (let i = 0; i < 8; i++) {
     c = makeRoomCode();
@@ -109,10 +153,16 @@ function openRoom(c) {
   store("ftt_host_room", c);
   $("roomTag").textContent = c;
   $("roomTag").classList.remove("hidden");
+  $("closeRoomBtn").classList.remove("hidden");
   current = null;
   seenPlates = new Set();
+  markHost();
   if (unsub) unsub();
-  unsub = onValue(R(""), snap => { room = snap.val() || {}; render(); });
+  unsub = onValue(R(""), snap => {
+    room = snap.val();
+    if (!room || !room.state) { closeRoom().then(() => show("start")); return; }
+    render();
+  });
 }
 
 // ── Render on every data change ──────────────────────────────
@@ -540,7 +590,7 @@ function confetti(count = 70) {
   }
 }
 $("againBtn").onclick = () => advance(() => update(R("state"), { phase: "lobby" }));
-$("freshBtn").onclick = () => { if (confirm("Start a new room? Teams will need to join again.")) createRoom(); };
+$("freshBtn").onclick = () => { if (confirm("Start a new room? Every phone will be disconnected and teams will need to join again.")) createRoom(); };
 
 // ── Timer loop: counts down and moves the game forward ───────
 async function advance(fn) {

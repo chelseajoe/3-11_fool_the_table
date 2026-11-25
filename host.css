@@ -188,3 +188,6 @@ body { display: flex; flex-direction: column; min-height: 100vh; overflow-x: hid
   .step { width: 120px; }
   .step .burst { width: 280px; height: 280px; margin-left: -140px; }
 }
+
+.close-room { font: inherit; font-size: .85rem; background: none; border: 1px solid transparent; color: var(--gravy); opacity: .35; padding: .2em .5em; border-radius: 8px; }
+.close-room:hover, .close-room:focus-visible { opacity: 1; border-color: var(--gravy); }

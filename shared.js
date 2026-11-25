@@ -1,10 +1,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getDatabase, ref, onValue, set, update, get, remove, runTransaction, onDisconnect
+  getDatabase, ref, onValue, set, update, get, remove, runTransaction, onDisconnect, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import { firebaseConfig } from "./config.js";
 
-export { ref, onValue, set, update, get, remove, runTransaction, onDisconnect };
+export { ref, onValue, set, update, get, remove, runTransaction, onDisconnect, serverTimestamp };
+
+// If the host's tab is closed for this long, phones leave the game automatically
+export const HOST_GRACE_MS = 30000;
 
 export function configMissing() {
   return !firebaseConfig.databaseURL ||
