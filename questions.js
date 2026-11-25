@@ -6,7 +6,8 @@ export const SETTINGS = {
   voteSeconds: 30,    // time to vote
   truthPoints: 1000,  // points for picking the real answer
   foolPoints: 500,    // points for EACH team you fool with your fake
-  minOptions: 5       // if there are fewer answers than this, the game adds its own fakes
+  minOptions: 5,      // if there are fewer answers than this, the game adds its own fakes
+  shuffle: false      // false = questions play in the order below; true = random order
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -17,15 +18,23 @@ export const SETTINGS = {
 //           (a team that types one of these is asked to write a fake instead)
 //  decoys : the game's own fake answers, used when teams don't write enough
 //  fact   : the "Did you know?" card shown after the reveal
+//  media  : (optional) pictures or videos shown on the "Did you know?" card.
+//           Put the files in the media folder, then list them like this:
+//           media: [{ src: "media/photo.jpg" }, { src: "media/clip.mp4", type: "video" }]
 //  Add, remove, or edit questions freely.
 // ─────────────────────────────────────────────────────────────
 export const QUESTIONS = [
   {
-    prompt: "Canned cranberry sauce usually slides out still in the shape of the ______.",
+    prompt: "Many Americans serve cranberry sauce straight from this kind of container: a ______.",
     answer: "Can",
-    accept: ["can", "the can", "tin", "cylinder", "tube"],
-    decoys: ["Pumpkin", "Bowl", "Moon"],
-    fact: "Many Americans love it this way, and some people even slice it along the lines left by the can."
+    accept: ["can", "a can", "the can", "tin", "tin can", "a tin", "cans"],
+    decoys: ["Bowl", "Jar", "Box"],
+    fact: "Canned cranberry sauce slides out in one piece, still shaped like the can, ridges and all! Many families slice it into circles. Others make it fresh with whole cranberries.",
+    media: [
+      { src: "media/cranberry-slices.jpg", alt: "Canned cranberry sauce cut into round slices" },
+      { src: "media/cranberry-can.mp4", type: "video", alt: "Cranberry sauce sliding out of a can onto a plate" },
+      { src: "media/cranberry-plate.jpg", alt: "A Thanksgiving plate with turkey, mashed potatoes, and cranberry sauce" }
+    ]
   },
   {
     prompt: "Two people pull a turkey’s wishbone. The person with the bigger piece gets to ______.",

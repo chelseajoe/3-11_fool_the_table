@@ -6,6 +6,15 @@ import {
 import { QUESTIONS, SETTINGS } from "./questions.js";
 
 const $ = id => document.getElementById(id);
+
+// Safety net: if host.html is an older copy without the Close room button, add it
+if (!$("closeRoomBtn")) {
+  const b = document.createElement("button");
+  b.id = "closeRoomBtn"; b.className = "close-room hidden"; b.textContent = "Close room";
+  b.title = "Close this room and disconnect all phones";
+  const tr = document.querySelector(".topright");
+  if (tr) tr.insertBefore(b, $("conn")); else document.body.appendChild(b);
+}
 const SCREENS = ["setup", "start", "lobby", "write", "vote", "reveal", "fact", "scores", "end"];
 let current = null;
 function show(name) {
@@ -69,7 +78,7 @@ $("ptFool").textContent = `+${SETTINGS.foolPoints.toLocaleString()}`;
 for (let n = 1; n <= QUESTIONS.length; n++) {
   const o = document.createElement("option");
   o.value = n; o.textContent = n === QUESTIONS.length ? `${n} (all)` : n;
-  if (n === 7) o.selected = true;
+  if (n === (QUESTIONS.length <= 10 ? QUESTIONS.length : 7)) o.selected = true;
   $("qCount").appendChild(o);
 }
 
@@ -254,7 +263,7 @@ $("startBtn").onclick = () => advance(startGame);
 
 async function startGame() {
   const n = Math.min(+$("qCount").value || 7, QUESTIONS.length);
-  gameOrder = shuffle([...QUESTIONS.keys()]).slice(0, n);
+  gameOrder = (SETTINGS.shuffle ? shuffle([...QUESTIONS.keys()]) : [...QUESTIONS.keys()]).slice(0, n);
   const upd = { qOrder: gameOrder, answers: null, votes: null, options: null, secret: null, scored: null };
   teamList().forEach(t => { upd[`teams/${t.id}/score`] = 0; upd[`teams/${t.id}/lastDelta`] = 0; });
   await update(R(""), upd);
@@ -275,6 +284,7 @@ async function startQuestion(qNum, total) {
 // ── Write phase ──────────────────────────────────────────────
 function enterWrite() {
   const s = st();
+  preloadMedia(currentQ());
   $("wPrompt").innerHTML = promptHTML(s.prompt);
   $("doubleBanner").classList.toggle("hidden", !s.double);
   show("write");
@@ -427,11 +437,60 @@ async function runReveal() {
   $("fAnswer").textContent = q.answer;
   $("fText").textContent = q.fact;
   show("fact");
+  showMedia(q);
   revealRunning = false;
 }
 $("rSkip").onclick = () => { skipReveal = true; };
 
+// ── Pictures / videos on the fact card ───────────────────────
+let mediaTimer = null;
+function stopMedia() {
+  clearTimeout(mediaTimer);
+  document.querySelectorAll("#fMedia video").forEach(v => { v.pause(); v.onended = null; });
+}
+function preloadMedia(q) {
+  (q && q.media || []).forEach(m => {
+    if (m.type === "video") { const v = document.createElement("video"); v.preload = "auto"; v.src = m.src; }
+    else { const i = new Image(); i.src = m.src; }
+  });
+}
+function showMedia(q) {
+  stopMedia();
+  const box = $("fMedia");
+  const items = (q && q.media) || [];
+  $("factCard").classList.toggle("has-media", items.length > 0);
+  box.classList.toggle("hidden", !items.length);
+  box.innerHTML = "";
+  if (!items.length) return;
+  box.innerHTML = items.map(m => m.type === "video"
+      ? `<video class="m" src="${escapeHTML(m.src)}" muted playsinline preload="auto" ${items.length === 1 ? "loop" : ""} aria-label="${escapeHTML(m.alt || "")}"></video>`
+      : `<img class="m" src="${escapeHTML(m.src)}" alt="${escapeHTML(m.alt || "")}">`).join("") +
+    (items.length > 1 ? `<div class="mdots">${items.map((_, i) => `<button data-i="${i}" aria-label="Show picture ${i + 1}"></button>`).join("")}</div>` : "");
+  const els = [...box.querySelectorAll(".m")];
+  const dots = [...box.querySelectorAll(".mdots button")];
+  let idx = -1;
+  const go = i => {
+    clearTimeout(mediaTimer);
+    idx = i;
+    els.forEach((el, k) => {
+      el.classList.toggle("on", k === i);
+      if (el.tagName === "VIDEO") {
+        el.onended = null;
+        if (k === i) { el.currentTime = 0; el.play().catch(() => {}); } else el.pause();
+      }
+    });
+    dots.forEach((d, k) => d.classList.toggle("on", k === i));
+    if (els.length < 2) return;
+    const el = els[i];
+    if (el.tagName === "VIDEO") el.onended = () => { mediaTimer = setTimeout(() => go((idx + 1) % els.length), 1200); };
+    else mediaTimer = setTimeout(() => go((idx + 1) % els.length), 4500);
+  };
+  dots.forEach(d => { d.onclick = () => go(+d.dataset.i); });
+  go(0);
+}
+
 $("fNext").onclick = () => advance(async () => {
+  stopMedia();
   await applyScores();
   await update(R("state"), { phase: "scores" });
 });
